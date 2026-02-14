@@ -22,7 +22,7 @@ public class FixedRateRebateStrategy : IRebateCalculationStrategy
         if (product == null)
             return false;
 
-        if (!product.SupportedIncentives.HasFlag(Domain.Enums.SupportedIncentiveType.FixedRateRebate))
+        if (product.SupportedIncentives != Domain.Enums.SupportedIncentiveType.FixedRateRebate)
             return false;
 
         if (rebate.Percentage == 0 || product.Price == 0 || request.Volume == 0)

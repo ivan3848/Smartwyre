@@ -10,25 +10,17 @@ namespace Smartwyre.DeveloperTest.Application.UseCases;
 /// Implements the core business logic for calculating rebates
 /// Clean Architecture - Application layer orchestrates domain logic
 /// </summary>
-public class CalculateRebateUseCase : ICalculateRebateUseCase
+public class CalculateRebateUseCase(
+    IRebateRepository rebateRepository,
+    IProductRepository productRepository,
+    IRebateCalculationStrategyFactory strategyFactory) : ICalculateRebateUseCase
 {
-    private readonly IRebateRepository _rebateRepository;
-    private readonly IProductRepository _productRepository;
-    private readonly IRebateCalculationStrategyFactory _strategyFactory;
-
-    public CalculateRebateUseCase(
-        IRebateRepository rebateRepository,
-        IProductRepository productRepository,
-        IRebateCalculationStrategyFactory strategyFactory)
-    {
-        _rebateRepository = rebateRepository ?? throw new ArgumentNullException(nameof(rebateRepository));
-        _productRepository = productRepository ?? throw new ArgumentNullException(nameof(productRepository));
-        _strategyFactory = strategyFactory ?? throw new ArgumentNullException(nameof(strategyFactory));
-    }
+    private readonly IRebateRepository _rebateRepository = rebateRepository ?? throw new ArgumentNullException(nameof(rebateRepository));
+    private readonly IProductRepository _productRepository = productRepository ?? throw new ArgumentNullException(nameof(productRepository));
+    private readonly IRebateCalculationStrategyFactory _strategyFactory = strategyFactory ?? throw new ArgumentNullException(nameof(strategyFactory));
 
     public CalculateRebateResult Execute(CalculateRebateRequest request)
     {
-        // Step 1: Retrieve domain entities
         var rebate = _rebateRepository.GetById(request.RebateIdentifier);
         if (rebate == null)
         {
@@ -51,10 +43,8 @@ public class CalculateRebateUseCase : ICalculateRebateUseCase
 
         try
         {
-            // Step 2: Get the appropriate calculation strategy
             var strategy = _strategyFactory.GetStrategy(rebate.Incentive);
 
-            // Step 3: Validate if calculation can be performed
             if (!strategy.CanCalculate(rebate, product, request))
             {
                 return new CalculateRebateResult 
@@ -64,13 +54,9 @@ public class CalculateRebateUseCase : ICalculateRebateUseCase
                 };
             }
 
-            // Step 4: Perform the calculation
             var calculatedAmount = strategy.Calculate(rebate, product, request);
-
-            // Step 5: Persist the result
             _rebateRepository.SaveCalculationResult(rebate, calculatedAmount);
 
-            // Step 6: Return success result
             return new CalculateRebateResult
             {
                 Success = true,

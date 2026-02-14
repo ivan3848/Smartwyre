@@ -5,7 +5,7 @@ namespace Smartwyre.DeveloperTest.Domain.Enums;
 /// </summary>
 public enum IncentiveType
 {
-    FixedRateRebate,
-    AmountPerUom,
-    FixedCashAmount
+    FixedRateRebate = 0,
+    AmountPerUom = 1,
+    FixedCashAmount = 2
 }

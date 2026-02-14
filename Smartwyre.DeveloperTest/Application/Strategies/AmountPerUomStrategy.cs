@@ -1,4 +1,3 @@
-using System;
 using Smartwyre.DeveloperTest.Application.DTOs;
 using Smartwyre.DeveloperTest.Application.Interfaces;
 using Smartwyre.DeveloperTest.Domain.Entities;
@@ -22,7 +21,7 @@ public class AmountPerUomStrategy : IRebateCalculationStrategy
         if (product == null)
             return false;
 
-        if (!product.SupportedIncentives.HasFlag(Domain.Enums.SupportedIncentiveType.AmountPerUom))
+        if (product.SupportedIncentives != Domain.Enums.SupportedIncentiveType.AmountPerUom)
             return false;
 
         if (rebate.Amount == 0 || request.Volume == 0)

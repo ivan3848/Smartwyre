@@ -1,6 +1,7 @@
 using Smartwyre.DeveloperTest.Domain.Entities;
 using Smartwyre.DeveloperTest.Domain.Interfaces;
 using Smartwyre.DeveloperTest.Infrastructure.Data;
+using System;
 
 namespace Smartwyre.DeveloperTest.Infrastructure.Persistence;
 
@@ -26,10 +27,6 @@ public class RebateRepository : IRebateRepository
     public void SaveCalculationResult(Rebate rebate, decimal rebateAmount)
     {
         // Store calculation result in mock data store
-        // In production, this would update the database
-        System.Console.WriteLine($"💾 Saving calculation result: Rebate={rebate.Identifier}, Amount=${rebateAmount:F2}");
-
-        // Note: In a real implementation, this would update the rebate record
-        // For now, we just log the operation
+        Console.WriteLine($"💾 Saving calculation result: Rebate={rebate.Identifier}, Amount=${rebateAmount:F2}");
     }
 }

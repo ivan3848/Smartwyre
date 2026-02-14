@@ -10,24 +10,14 @@ namespace Smartwyre.DeveloperTest.Application.Strategies;
 /// Factory for selecting the appropriate rebate calculation strategy
 /// Clean Architecture - Application layer orchestrates strategy selection
 /// </summary>
-public class RebateCalculationStrategyFactory : IRebateCalculationStrategyFactory
+public class RebateCalculationStrategyFactory(IEnumerable<IRebateCalculationStrategy> strategies) : IRebateCalculationStrategyFactory
 {
-    private readonly IEnumerable<IRebateCalculationStrategy> _strategies;
-
-    public RebateCalculationStrategyFactory(IEnumerable<IRebateCalculationStrategy> strategies)
-    {
-        _strategies = strategies ?? throw new ArgumentNullException(nameof(strategies));
-    }
+    private readonly IEnumerable<IRebateCalculationStrategy> _strategies = strategies ?? throw new ArgumentNullException(nameof(strategies));
 
     public IRebateCalculationStrategy GetStrategy(IncentiveType incentiveType)
     {
         var strategy = _strategies.FirstOrDefault(s => s.SupportedIncentiveType == incentiveType);
-        
-        if (strategy == null)
-        {
-            throw new NotSupportedException($"Incentive type '{incentiveType}' is not supported.");
-        }
 
-        return strategy;
+        return strategy ?? throw new NotSupportedException($"Incentive type '{incentiveType}' is not supported.");
     }
 }

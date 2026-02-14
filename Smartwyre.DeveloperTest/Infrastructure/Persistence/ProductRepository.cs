@@ -13,13 +13,11 @@ public class ProductRepository : IProductRepository
 {
     public Product GetById(string productIdentifier)
     {
-        // Get product from mock data store
         if (MockDataStore.Products.TryGetValue(productIdentifier, out var product))
         {
             return product;
         }
 
-        // Return null if product not found
         return null;
     }
 }

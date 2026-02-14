@@ -22,7 +22,7 @@ public class FixedCashAmountStrategy : IRebateCalculationStrategy
         if (product == null)
             return false;
 
-        if (!product.SupportedIncentives.HasFlag(Domain.Enums.SupportedIncentiveType.FixedCashAmount))
+        if (product.SupportedIncentives != Domain.Enums.SupportedIncentiveType.FixedCashAmount)
             return false;
 
         if (rebate.Amount == 0)
